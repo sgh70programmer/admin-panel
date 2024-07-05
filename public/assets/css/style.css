@@ -50,7 +50,8 @@ body {
 a.active {
     background-color: #ebe6e681 ;
     color: #0a58ca;
-    
-    
 
+}
+.swal-footer{
+    text-align: center;
 }

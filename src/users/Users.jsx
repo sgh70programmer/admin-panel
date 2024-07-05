@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
+import { jpAxios } from "../JpAxios";
 import axios from 'axios';
 import style from '../style.module.css'
 
@@ -9,14 +10,18 @@ const Users = () => {
 
     const navigate = useNavigate()
     const [users, setUsers] = useState([]);
+    const [mainUsers , setMainUsers] = useState([]);
 
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
+        jpAxios.get('/users').then(res => {
             setUsers(res.data);
+            setMainUsers(res.data);
         }).catch(err => {
             console.log(err);
         })
     }, []);
+
+
 
     const handleDelete = (itemId) => {
         swal({
@@ -28,15 +33,34 @@ const Users = () => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    swal("حذف با موفقیت انجام شد", {
-                        icon: "success",
-                        buttons: "متوجه شدم",
+                    axios({
+                        method: "DELETE",
+                        url: `https://jsonplaceholder.typicode.com/users/${itemId}`
+                    }).then(res => {
 
-                    });
+                        if (res.status == 200) {
+                            const newUsers = users.filter(u => u.id != itemId);
+                            setUsers(newUsers);
+                            swal("حذف با موفقیت انجام شد", {
+                                icon: "success",
+                                buttons: "متوجه شدم",
+                            });
+                        } else {
+                            swal("عملیات با خطا مواجه شد", {
+                                icon: "error",
+                                button: "متوجه شدم"
+                            });
+                        }
+
+                    })
                 } else {
                     swal("شما از حذف رکورد منصرف شدید");
                 }
             });
+    }
+
+    const handleSearch = (event)=>{
+        setUsers(mainUsers.filter(user=>user.name.includes(event.target.value)))
     }
 
     return (
@@ -44,7 +68,7 @@ const Users = () => {
             <h4 className="text-center">مدیریت کاربران</h4>
             <div className="row my-2 mb-4 justify-content-between w-100 mx-0">
                 <div className="form-group col-10 col-md-6 col-lg-4">
-                    <input type="text" className="form-control shadow" placeholder="جستجو" />
+                    <input type="text" className="form-control shadow" placeholder="جستجو" onChange={handleSearch} />
                 </div>
                 <div className="col-2 text-start px-0">
                     <Link to="/user/add" state={"react"}>
@@ -74,16 +98,10 @@ const Users = () => {
                                 <td>{u.email}</td>
                                 <td>
                                     <i className="fas fa-edit text-warning mx-2 pointer"
-                                        onClick={() => navigate("/user/add/2", {
-                                            state:
-                                            {
-                                                x: "react",
-                                                y: "angular"
-                                            }
-                                        })}
+                                        onClick={() => navigate(`/user/add/${u.id}`)}
                                     ></i>
                                     <i className="fas fa-trash text-danger mx-2 pointer"
-                                        onClick={() => handleDelete(1)}
+                                        onClick={() => handleDelete(u.id)}
                                     ></i>
                                 </td>
                             </tr>

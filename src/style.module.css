@@ -74,6 +74,8 @@ td , th {
     transition: all 300ms ease;
 }
 
+
+
 @media(max-width:768px){
     .content_section{
         width: 100%;
