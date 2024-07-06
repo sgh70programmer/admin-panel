@@ -55,3 +55,6 @@ a.active {
 .swal-footer{
     text-align: center;
 }
+.form-control{
+    appearance: auto !important;
+}
