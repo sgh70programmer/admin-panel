@@ -29,11 +29,11 @@ const Content = () => {
                 onClick={handleShowMenu}
             ></i>
             <Routes>
-                {/* <Route path="/" element={<Navigate replace to="/gallery"/>} /> */}
+                
                 <Route path="/user" element={<Users />} />
                 <Route path="/user/add" element={<AddUser />}>
                     <Route path=":userId" />
-                    {/* <Route path=":userId" element={<EditDesc/>} /> */}
+                   
                 </Route>
                 <Route path="/post" element={<Posts />} />
                 <Route path="/gallery" element={<Gallery />} />
